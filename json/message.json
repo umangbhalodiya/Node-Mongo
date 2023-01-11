@@ -1,0 +1,12 @@
+{
+  "GENERAL": "Sorry! Something went wrong with the request. Please try again later.",
+  "INTERNAL_SERVER_ERROR": "Internal Server Error",
+  "INVALID_PARAMETERS": "Sorry, the request could not be processed as because of invalid parameters.",
+  "ITEM_INSERTED":"New Data created sucessfully",
+  "ITEM_FETCHED":"Data fetched sucessfully",
+  "ITEM_UPDATED":"Data updated sucessfully",
+  "ITEM_NOT_FOUND":"Data does not exist in the system",
+  "ITEM_DELETED":"Data deleted sucessfully",
+  "ITEM_FAVOURITE":"Data added sucessfully in favourite list",
+  "ITEM_UNFAVOURITE":"Data removed sucessfully in favourite list"
+}
