@@ -23,11 +23,10 @@ mongoose
   .then(async () => {
     const port = process.env.PORT || 8080;
     app.listen(port);
-
     console.log(`Server engine ${port} started...🚀🚀`);
-    console.log("🟢 Database Initiated......😎");
+    console.log("🟢 Connected To Mongo DB......😎");
   })
 
   .catch((err) => {
-    console.log(err);
+    console.log("🔴 Could Not Connect To Mongo DB Server......😢", err);
   });

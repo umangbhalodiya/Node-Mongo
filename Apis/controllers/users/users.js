@@ -39,15 +39,7 @@ module.exports = {
     }
     try {
       let hashPassword = await bcrypt.hash(password, 10);
-      let userCreate = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        userName: userName,
-        password: hashPassword,
-        contact: contact,
-        locations: [],
-      };
+      let userCreate = { ...req.body, password: hashPassword };
       const newUser = new userSchema(userCreate);
       let user = await newUser.save();
       const token = JWTHelper.getJWTToken({
@@ -57,15 +49,7 @@ module.exports = {
       });
       let response = {
         user: {
-          id: user._id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          contact: user.contact,
-          userName: user.userName,
-          isActive: user.isActive,
-          locations: user.locations,
-          role: user.role,
+          user,
         },
         token,
       };
@@ -147,15 +131,13 @@ module.exports = {
     try {
       const userData = await userSchema.findByIdAndUpdate(
         { _id: userId },
-        req.body.place
-          ? { $push: { locations: req.body } }
-          : req.body,
+        req.body.place ? { $push: { locations: req.body } } : req.body,
         { new: true }
       );
       const responseObject = {
         result: 0,
         message: messages.ITEM_UPDATED,
-        payload:  userData ,
+        payload: userData,
       };
       res.status(enums.HTTP_CODES.OK).json(responseObject);
     } catch (error) {
