@@ -20,3 +20,5 @@ router.get("/getUsers/", userController.getAllUser);
 router.get("/getById", userController.getUserById);
 module.exports = router;
 // validate("body", userController.validation),
+
+// session data can be get and set using req.session object 
