@@ -1,4 +1,3 @@
-const enums = require("../../../json/enums.json");
 const User = require("../../models/usersModals/userModals");
 const userSchema = require("../../models/usersModals/userModals");
 const bcrypt = require("bcryptjs");
@@ -12,10 +11,10 @@ module.exports = {
       //------------------ * taking id from query to fetch data * --------------------//
       let userId = req.query.id;
       let users = await userSchema.findById({ _id: userId });
-      return res.status(enums.HTTP_CODES.OK).json(users);
+      return res.status(200).json(users);
     } catch (err) {
       res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
+        .status(500)
         .json({ message: "User not found" });
     }
   },
@@ -35,7 +34,7 @@ module.exports = {
         message: messages.INVALID_PARAMETERS,
         payload: {},
       };
-      return res.status(enums.HTTP_CODES.BAD_REQUEST).json({ responseObject });
+      return res.status(400).json({ responseObject });
     }
     try {
       let hashPassword = await bcrypt.hash(password, 10);
@@ -58,14 +57,14 @@ module.exports = {
         message: messages.ITEM_INSERTED,
         payload: { user: response.user, token },
       };
-      return res.status(enums.HTTP_CODES.OK).json(responseObject);
+      return res.status(200).json(responseObject);
     } catch (error) {
       const responseObject = {
         result: -1,
         message: messages.GENERAL,
         payload: {},
       };
-      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(responseObject);
+      res.status(500).json(responseObject);
     }
   },
 
@@ -77,7 +76,7 @@ module.exports = {
         message: messages.INVALID_PARAMETERS,
         payload: {},
       };
-      return res.status(enums.HTTP_CODES.BAD_REQUEST).json({ responseObject });
+      return res.status(400).json({ responseObject });
     }
     try {
       const user = await User.findOne({ email: email, isActive: true });
@@ -115,14 +114,14 @@ module.exports = {
 
         //-------------------- * send response * --------------------------//
 
-        return res.status(enums.HTTP_CODES.OK).json({ response });
+        return res.status(200).json({ response });
       } else {
         return res
-          .status(enums.HTTP_CODES.OK)
+          .status(200)
           .json({ message: "Could not login" });
       }
     } catch (e) {
-      return res.status(enums.HTTP_CODES.OK).json({ message: "bad request" });
+      return res.status(200).json({ message: "bad request" });
     }
   },
 
@@ -139,14 +138,14 @@ module.exports = {
         message: messages.ITEM_UPDATED,
         payload: userData,
       };
-      res.status(enums.HTTP_CODES.OK).json(responseObject);
+      res.status(200).json(responseObject);
     } catch (error) {
       const responseObject = {
         result: -1,
         message: messages.GENERAL,
         payload: {},
       };
-      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(responseObject);
+      res.status(500).json(responseObject);
     }
   },
 
@@ -159,7 +158,7 @@ module.exports = {
         message: messages.ITEM_NOT_FOUND,
         payload: {},
       };
-      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(responseObject);
+      res.status(500).json(responseObject);
     }
 
     try {
@@ -169,14 +168,14 @@ module.exports = {
         message: messages.ITEM_DELETED,
         payload: {},
       };
-      res.status(enums.HTTP_CODES.OK).json(responseObject);
+      res.status(200).json(responseObject);
     } catch (error) {
       const responseObject = {
         result: -1,
         message: messages.GENERAL,
         payload: {},
       };
-      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(responseObject);
+      res.status(500).json(responseObject);
     }
   },
   getAllUser: async (req, res) => {
@@ -187,14 +186,14 @@ module.exports = {
         message: messages.ITEM_FETCHED,
         payload: { user },
       };
-      res.status(enums.HTTP_CODES.OK).json(responseObject);
+      res.status(200).json(responseObject);
     } catch (error) {
       const responseObject = {
         result: -1,
         message: messages.GENERAL,
         payload: {},
       };
-      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(responseObject);
+      res.status(500).json(responseObject);
     }
   },
 };
