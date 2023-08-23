@@ -3,8 +3,7 @@ const userSchema = require("../../models/usersModals/userModals");
 const bcrypt = require("bcryptjs");
 const messages = require("../../../json/message.json");
 const JWTHelper = require("../../../helpers/jwt.helper");
-const Utils = require("../../../utils/utils");
-
+ 
 module.exports = {
   getUserById: async (req, res) => {
     try {
