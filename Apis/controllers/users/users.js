@@ -3,7 +3,7 @@ const userSchema = require("../../models/usersModals/userModals");
 const bcrypt = require("bcryptjs");
 const messages = require("../../../json/message.json");
 const JWTHelper = require("../../../helpers/jwt.helper");
- 
+
 module.exports = {
   getUserById: async (req, res) => {
     try {
@@ -12,28 +12,15 @@ module.exports = {
       let users = await userSchema.findById({ _id: userId });
       return res.status(200).json(users);
     } catch (err) {
-      res
-        .status(500)
-        .json({ message: "User not found" });
+      res.status(500).json({ message: "User not found" });
     }
   },
   createUser: async (req, res) => {
-    const { firstName, lastName, email, userName, password, contact } =
-      req.body;
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !userName ||
-      !password ||
-      !contact
-    ) {
-      const responseObject = {
-        result: -1,
-        message: messages.INVALID_PARAMETERS,
-        payload: {},
-      };
-      return res.status(400).json({ responseObject });
+    const { name, email, password, contact } = req.body;
+    if (!name || !email || !password || !contact) {
+      return res
+        .status(400)
+        .json({ message: "Didn't get required parameters" });
     }
     try {
       let hashPassword = await bcrypt.hash(password, 10);
@@ -52,34 +39,26 @@ module.exports = {
         token,
       };
       const responseObject = {
-        result: 0,
-        message: messages.ITEM_INSERTED,
+        message: "Item Found",
         payload: { user: response.user, token },
       };
       return res.status(200).json(responseObject);
     } catch (error) {
-      const responseObject = {
-        result: -1,
-        message: messages.GENERAL,
-        payload: {},
-      };
-      res.status(500).json(responseObject);
+      res.status(500).json({
+        message: "Something went wrong",
+      });
     }
   },
 
   loginUser: async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
-      const responseObject = {
-        result: -1,
-        message: messages.INVALID_PARAMETERS,
-        payload: {},
-      };
-      return res.status(400).json({ responseObject });
+      return res
+        .status(400)
+        .json({ message: "Didn't get required parameters" });
     }
     try {
       const user = await User.findOne({ email: email, isActive: true });
-
       if (!user) {
         return res.status(200).json({ msg: "User does not exist." });
       }
@@ -98,14 +77,11 @@ module.exports = {
 
         let response = {
           user: {
-            id: user._id,
-            firstName: user.firstName,
-            lastName: user.lastName,
+            _id: user._id,
+            name: user.name,
             email: user.email,
             contact: user.contact,
-            userName: user.userName,
             isActive: user.isActive,
-            locations: user.locations,
             role: user.role,
           },
           token,
@@ -115,9 +91,7 @@ module.exports = {
 
         return res.status(200).json({ response });
       } else {
-        return res
-          .status(200)
-          .json({ message: "Could not login" });
+        return res.status(200).json({ message: "Could not login" });
       }
     } catch (e) {
       return res.status(200).json({ message: "bad request" });
@@ -132,19 +106,14 @@ module.exports = {
         req.body.place ? { $push: { locations: req.body } } : req.body,
         { new: true }
       );
-      const responseObject = {
-        result: 0,
-        message: messages.ITEM_UPDATED,
+      res.status(200).json({
+        message: "User Updated",
         payload: userData,
-      };
-      res.status(200).json(responseObject);
+      });
     } catch (error) {
-      const responseObject = {
-        result: -1,
-        message: messages.GENERAL,
-        payload: {},
-      };
-      res.status(500).json(responseObject);
+      res.status(500).json({
+        message: "Something went wrong",
+      });
     }
   },
 
@@ -152,47 +121,33 @@ module.exports = {
     const { userId } = req.params;
     const userData = await userSchema.findOne({ _id: userId });
     if (!userData) {
-      const responseObject = {
-        result: 0,
-        message: messages.ITEM_NOT_FOUND,
-        payload: {},
-      };
-      res.status(500).json(responseObject);
+      res.status(500).json({
+        message: "Not Found",
+      });
     }
 
     try {
       const deleteUser = await userSchema.findOneAndDelete({ _id: userId });
-      const responseObject = {
-        result: 0,
-        message: messages.ITEM_DELETED,
-        payload: {},
-      };
-      res.status(200).json(responseObject);
+      res.status(200).json({
+        message: "Deleted",
+      });
     } catch (error) {
-      const responseObject = {
-        result: -1,
-        message: messages.GENERAL,
-        payload: {},
-      };
-      res.status(500).json(responseObject);
+      res.status(500).json({
+        message: "Something Went Wrong",
+      });
     }
   },
   getAllUser: async (req, res) => {
     try {
       let user = await userSchema.find();
-      const responseObject = {
-        result: 0,
-        message: messages.ITEM_FETCHED,
+      res.status(200).json({
+        message: "Users Founds",
         payload: { user },
-      };
-      res.status(200).json(responseObject);
+      });
     } catch (error) {
-      const responseObject = {
-        result: -1,
-        message: messages.GENERAL,
-        payload: {},
-      };
-      res.status(500).json(responseObject);
+      res.status(500).json({
+        message: "Something Went Wrong",
+      });
     }
   },
 };

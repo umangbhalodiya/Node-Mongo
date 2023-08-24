@@ -4,23 +4,11 @@ const users = require("../../controllers/users/users");
 
 const userSchema = new mongoose.Schema(
   {
-    firstName: String,
-    lastName: String,
+    name: String,
     email: String,
-    userName: String,
     password: String,
     contact: Number,
     isActive: { type: Boolean, default: true },
-    locations: [
-      {
-        place: String,
-        coordinates: [],
-        area: Number,
-        width: Number,
-        lgth: Number,
-        // type: { type: String, default: [] },
-      },
-    ],
   },
   {
     timestamps: true,
